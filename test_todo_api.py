@@ -51,11 +51,22 @@ def test_can_update_task():
     assert get_task_data['is_done'] == new_payload['is_done']
 
 
+def test_can_list_tasks():
+    list_rask_response = list_tasks("test_user")
+    assert list_rask_response.status_code == 200
+    data = list_rask_response.json()
+    tasks = data['tasks']
+    assert len(tasks) == 10
+
+
 
 
 def update_task(payload):
     return requests.put(url + '/update-task', json=payload)
 
+
+def list_tasks(user_id):
+    return requests.get(url+f'/list-tasks/{user_id}')
 
 
 def create_task(payload):
