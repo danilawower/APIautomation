@@ -1,3 +1,5 @@
+import random
+
 import requests
 
 url = "https://todo.pixegami.io/"
@@ -59,6 +61,25 @@ def test_can_list_tasks():
     assert len(tasks) == 10
 
 
+def test_can_delete_tasks():
+    #create task
+    payload = new_task_payload()
+    new_task = create_task(payload)
+    new_task_data = new_task.json()
+    task_id = new_task_data['task']['task_id']
+
+    #deleting task
+    delete_tasks(task_id)
+    getting_task = get_task(task_id)
+    assert getting_task.status_code == 404
+
+
+
+
+
+
+def delete_tasks(task_id):
+    return requests.delete(url+f'/delete-task/{task_id}')
 
 
 def update_task(payload):
@@ -82,6 +103,6 @@ def new_task_payload():
     return {
         "content": "test",
         "user_id": "test_user",
-        "task_id": "test_task_id",
+        "task_id": f"test_task_id{random.randint(1, 9999)}",
         "is_done": False,
     }
